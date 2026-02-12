@@ -5,7 +5,7 @@ services:
     build: .
     container_name: infradesk_app
     ports:
-      - "8000:8000"
+     - "8000:10000"
     volumes:
       - .:/var/www
     depends_on:
