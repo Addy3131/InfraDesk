@@ -1,0 +1,27 @@
+services:
+  app:
+    build:
+      context: .
+      additional_contexts:
+        # Map contexts from inside the unified directory
+        frontend: ../infradesk-web
+        backend: ../infradesk-api
+    container_name: infradesk_app
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      # Optional: Map the .env file over if it's placed in this deploy folder
+      # - ./.env.production:/var/www/backend/.env
+      # Map storage out so uploads/logs persist outside the container
+      - ./storage:/var/www/backend/storage
+    environment:
+      - APP_ENV=production
+      - DB_CONNECTION=pgsql
+      - DB_HOST=host.docker.internal
+      - DB_PORT=5432
+      - DB_DATABASE=postgres
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
