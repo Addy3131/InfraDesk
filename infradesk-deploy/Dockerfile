@@ -6,10 +6,10 @@ WORKDIR /app/frontend
 
 
 # Copy frontend source
-COPY --from=frontend package.json package-lock.json* ./
+COPY infradesk-web/package.json infradesk-web/package-lock.json* ./
 RUN npm ci
 
-COPY --from=frontend . .
+COPY infradesk-web/ ./
 # Enable static HTML export in Next.js (Ensure next.config.ts has output: 'export')
 RUN npm run build
 
@@ -20,7 +20,7 @@ FROM composer:2.7 AS backend-builder
 WORKDIR /app/backend
 
 # Copy backend source
-COPY --from=backend . .
+COPY infradesk-api/ ./
 RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
 # ==========================================
@@ -59,13 +59,13 @@ RUN chown -R www-data:www-data /var/www/backend/storage /var/www/backend/bootstr
     && chmod -R 775 /var/www/backend/storage /var/www/backend/bootstrap/cache
 
 # Copy Nginx config
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY infradesk-deploy/nginx.conf /etc/nginx/nginx.conf
 
 # Copy Supervisord config
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY infradesk-deploy/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Copy entrypoint script
-COPY start.sh /usr/local/bin/start.sh
+COPY infradesk-deploy/start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
 # Expose HTTP port

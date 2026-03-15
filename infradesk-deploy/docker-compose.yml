@@ -1,11 +1,8 @@
 services:
   app:
     build:
-      context: .
-      additional_contexts:
-        # Map contexts from inside the unified directory
-        frontend: ../infradesk-web
-        backend: ../infradesk-api
+      context: ..
+      dockerfile: infradesk-deploy/Dockerfile
     container_name: infradesk_app
     ports:
       - "80:80"
